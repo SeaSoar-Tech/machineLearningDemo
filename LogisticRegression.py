@@ -9,21 +9,22 @@ class LogisticRegression:
 
     def fit(self, X, y):
         num_samples, num_features = X.shape
-       
+        print(num_samples, num_features, y.shape)
         # Initialize weights and bias
         self.weights = np.zeros(num_features)
         self.bias = 0
 
         # Gradient descent
         for _ in range(self.num_iterations):
+            # note: here use vector calculation
             linear_model = np.dot(X, self.weights) + self.bias
-            y_pred = self._sigmoid(linear_model)
+            y_pred = self._sigmoid(linear_model) # n_features * 1 for input and output
 
             # Update weights and bias
             dw = (1 / num_samples) * np.dot(X.T, (y_pred - y))
             db = (1 / num_samples) * np.sum(y_pred - y)
-            print("dw: ", dw)
-            print("db: ", db)
+            # print("dw: ", dw)
+            # print("db: ", db)
             
             self.weights -= self.learning_rate * dw
             self.bias -= self.learning_rate * db
@@ -35,6 +36,7 @@ class LogisticRegression:
         return y_pred_class
 
     def _sigmoid(self, x):
+        print("_sigmoid ", x.shape)
         return 1 / (1 + np.exp(-x))
     
     
@@ -44,7 +46,6 @@ if __name__ == '__main__':
     import numpy as np
     from sklearn.model_selection import train_test_split
     from sklearn import datasets
-    import matplotlib.pyplot as plt
 
     # Load dataset
     bc = datasets.load_breast_cancer()
@@ -54,7 +55,7 @@ if __name__ == '__main__':
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1234)
 
     # Initialize model
-    model = LogisticRegression(learning_rate=0.0001, num_iterations=500)
+    model = LogisticRegression(learning_rate=0.0001, num_iterations=5)
 
     # Train model
     model.fit(X_train, y_train)
